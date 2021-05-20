@@ -8,31 +8,69 @@
     tools:context=".presentation.views.Tasks">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/task_actions_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/task_content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/task_actions_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/check_task_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="313dp"
+            android:layout_height="32dp"
+            android:layout_margin="4dp"
             android:background="@drawable/rounded_corners"
-            android:backgroundTint="@color/default_orange"
+            android:elevation="2dp"
             android:padding="4dp"
-            android:src="@drawable/ic_baseline_check_24"
-            tools:layout_editor_absoluteX="113dp"
-            tools:layout_editor_absoluteY="191dp" />
+            android:text="@string/task_item"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/task_actions_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/imageButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/rounded_corners"
             android:backgroundTint="@color/delete_red"
+            android:elevation="2dp"
             android:padding="4dp"
             android:src="@drawable/ic_baseline_delete_24"
-            tools:layout_editor_absoluteX="153dp"
-            tools:layout_editor_absoluteY="191dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/check_task_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/default_orange"
+            android:elevation="2dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_baseline_check_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
