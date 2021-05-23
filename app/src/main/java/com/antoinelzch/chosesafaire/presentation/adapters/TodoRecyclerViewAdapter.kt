@@ -1,60 +1,53 @@
 package com.antoinelzch.chosesafaire.presentation.adapters
 
-import android.content.Context
-import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.antoinelzch.chosesafaire.R
 import com.antoinelzch.chosesafaire.data.models.Todo
 import kotlinx.android.synthetic.main.task.view.*
 
-class TodoRecyclerViewAdapter(
-    private var todos: MutableList<Todo>,
-    val context: Context?
-): RecyclerView.Adapter<TodoRecyclerViewAdapter.TodoViewHolder>() {
+class TodoAdapter(
+    private val todoList: ArrayList<Todo>,
+    private val onButtonCheckListener: (Int, Boolean) -> Unit,
+    private val onButtonDeleteListener: (Int) -> Unit
+): RecyclerView.Adapter<TodoAdapter.TodoViewHolder>(){
 
-    class TodoViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
-        return TodoViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.task,
-                parent,
-                false
-            )
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): TodoAdapter.TodoViewHolder {
+        val viewHolder = LayoutInflater.from(parent.context).inflate(R.layout.task, parent, false)
+        return TodoViewHolder(viewHolder)
     }
 
-    fun addTodo(todo: Todo) {
-        todos.add(todo)
-        notifyItemInserted(todos.size - 1)
+    override fun getItemCount(): Int = todoList.size
+
+    override fun onBindViewHolder(holder: TodoAdapter.TodoViewHolder, position: Int) {
+        return holder.bind(todoList[position], onButtonCheckListener, onButtonDeleteListener)
     }
 
-    fun deleteDoneTodos() {
-        todos.removeAll { todo ->
-            todo.isChecked
+    inner class TodoViewHolder(private val todoView: View): RecyclerView.ViewHolder(todoView) {
+        fun bind(todo: Todo, onButtonCheckListener: (Int, Boolean) -> Unit, onButtonDeleteListener: (Int) -> Unit) {
+            todoView.task_title.text = todo.title
+            todoView.check_task_button.isChecked = todo.isChecked
+
+            todoView.setOnClickListener {
+                todoView.check_task_button.performClick()
+                todoView.check_task_button.isPressed = true
+                todoView.check_task_button.invalidate()
+                todoView.check_task_button.isPressed = false
+                todoView.check_task_button.invalidate()
+            }
+
+            todoView.check_task_button.setOnCheckedChangeListener { _, isChecked ->
+                onButtonCheckListener(todo.id, isChecked)
+            }
+
+            todoView.delete_task_button.setOnClickListener {
+                onButtonDeleteListener(todo.id)
+            }
         }
-        notifyDataSetChanged()
     }
-
-    private fun toggleStrikeThrough(todoTitle: TextView, isChecked: Boolean) {
-        if(isChecked) todoTitle.paintFlags = todoTitle.paintFlags or STRIKE_THRU_TEXT_FLAG
-        else todoTitle.paintFlags = todoTitle.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
-    }
-
-    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        val currTodo = todos[position]
-        holder.itemView.apply {
-            task_text.text = currTodo.title
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return todos.size
-    }
-
 }

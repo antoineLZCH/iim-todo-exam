@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="task_item">TaskItem</string>
+    <string name="no_todo">Vous n\'avez aucune todo</string>
+    <string name="new_todo">Nouvelle tâche</string>
 </resources>

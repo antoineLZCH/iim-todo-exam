@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/tasksFragment"
-        android:name="com.antoinelzch.chosesafaire.TasksFragment"
+        android:name="com.antoinelzch.chosesafaire.TodoFragment"
         android:label="TasksFragment" />
 </navigation>
