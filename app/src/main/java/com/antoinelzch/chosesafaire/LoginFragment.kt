@@ -1,18 +1,16 @@
 package com.antoinelzch.chosesafaire
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.antoinelzch.chosesafaire.data.network.ServiceBuilder
 import com.antoinelzch.chosesafaire.data.network.UserService
+import com.antoinelzch.chosesafaire.data.utils.SPUtils
+import com.antoinelzch.chosesafaire.data.utils.ValidationUtils
 import kotlinx.android.synthetic.main.fragment_login.*
 import retrofit2.Call
 import retrofit2.Response
@@ -25,38 +23,37 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(com.antoinelzch.chosesafaire.R.layout.fragment_login, container, false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (isLogged()) {
-            // TODO: Navigation to todo list
-            Log.d("tag", "Navigation")
-        }
-
 
         main_button_sign_in.setOnClickListener {
-            val email: String = main_username.text.toString()
+            val email: String = main_email.text.toString()
             val password: String = main_password.text.toString()
 
-            Log.d("tag", "${main_password.text}, ${main_username.text}")
-            if (isValidate(email, password)){
+            Log.d("tag", "${main_password.text}, ${main_email.text}")
+            if (isDataValid(email, password)){
                 callApi(email, password)
             }
         }
+
+        main_button_register.setOnClickListener {
+            (activity as MainActivity).goTo(R.id.action_loginFragment_to_registerFragment)
+        }
     }
 
-    private fun isValidate(email: String, password : String) :Boolean {
+    private fun isDataValid(email: String, password : String) :Boolean {
         var isValid = true
 
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!ValidationUtils.isEmailValid(email)){
             isValid = false
             Toast.makeText(activity, "Email non valide", Toast.LENGTH_SHORT).show()
         }
 
-        if (password.isEmpty() || password.length < 4){
+        if (!ValidationUtils.isPasswordValid(password)){
             isValid = false
             Toast.makeText(activity, "Mot de passe non valide, minimum 4 charactères", Toast.LENGTH_SHORT).show()
 
@@ -72,13 +69,9 @@ class LoginFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
 
-                val firstname: String? = activity?.getSharedPreferences("PREFERENCES", AppCompatActivity.MODE_PRIVATE)
-                    ?.getString("USER_FIRSTNAME", "")
-                val lastname: String? = activity?.getSharedPreferences("PREFERENCES", AppCompatActivity.MODE_PRIVATE)
-                    ?.getString("USER_LASTNAME", "")
-
                 response.body()?.let {
-                    setData(firstname, lastname)
+                    SPUtils.setBoth(email, password)
+                    (activity as MainActivity).goTo(R.id.action_loginFragment_to_tasksFragment)
                 }
             }
 
@@ -87,20 +80,8 @@ class LoginFragment : Fragment() {
             }
         })
     }
-    fun setData(firstname: String?, lastname: String?) {
-        val spe: SharedPreferences? = activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
-        spe?.edit()?.putString("USER_FIRSTNAME", firstname)?.apply()
-        spe?.edit()?.putString("USER_LASTNAME", lastname)?.apply()
-    }
 
     private fun isLogged(): Boolean {
-        return !activity?.getSharedPreferences("PREFERENCES", AppCompatActivity.MODE_PRIVATE)
-            ?.getString("USER_FIRSTNAME", "")
-            .isNullOrEmpty()
-                && !activity?.getSharedPreferences("PREFERENCES", AppCompatActivity.MODE_PRIVATE)
-            ?.getString("USER_LASTNAME", "")
-            .isNullOrEmpty()
+        return !SPUtils.getFirstName().isNullOrBlank() && !SPUtils.getLastName().isNullOrBlank()
     }
-
-
 }

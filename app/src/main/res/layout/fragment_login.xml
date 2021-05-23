@@ -12,7 +12,7 @@
     tools:context=".LoginFragment">
 
     <EditText
-        android:id="@+id/main_username"
+        android:id="@+id/main_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -39,7 +39,7 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_username" />
+        app:layout_constraintTop_toBottomOf="@+id/main_email" />
 
     <ProgressBar
         android:id="@+id/loading"

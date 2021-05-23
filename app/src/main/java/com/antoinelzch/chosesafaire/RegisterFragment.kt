@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.antoinelzch.chosesafaire.data.utils.SPUtils
+import com.antoinelzch.chosesafaire.data.utils.ValidationUtils
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -31,16 +33,15 @@ class RegisterFragment : Fragment() {
             val lastname: String = register_lastname.text.toString()
             val firstname: String = register_firstname.text.toString()
 
-            if(isValidate(email, password, lastname, firstname)) {
-                setData(firstname, lastname)
-                // TODO: Navigation to todo list
-                Log.d("tag", "Navigation")
+            if(isDataValid(email, password, lastname, firstname)) {
+                SPUtils.setBoth(firstname, lastname)
+                Log.d("tag", "USER IS REGISTERED - NAVIGATION TO TODO FRAGMENT")
+                (activity as MainActivity).goTo(R.id.action_registerFragment_to_tasksFragment)
             }
         }
     }
 
-
-    private fun isValidate(
+    private fun isDataValid(
         email: String,
         password: String,
         lastname: String,
@@ -48,32 +49,26 @@ class RegisterFragment : Fragment() {
         var isValid = true
 
 
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!ValidationUtils.isEmailValid(email)){
             isValid = false
             Toast.makeText(activity, "Email non valide", Toast.LENGTH_SHORT).show()
         }
 
-        if (password.isEmpty() || password.length > 4){
+        if (!ValidationUtils.isPasswordValid(password)){
             isValid = false
             Toast.makeText(activity, "Mot de passe non valide, minimum 4 charactères", Toast.LENGTH_SHORT).show()
         }
 
-        if (firstname.isEmpty()){
+        if (!ValidationUtils.isFirstNameNotEmptyOrBlank(firstname)){
             isValid = false
-            Toast.makeText(activity, "Nom non valide", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Le champ Prénom ne doit pas être vide", Toast.LENGTH_SHORT).show()
         }
 
-        if (lastname.isEmpty()){
+        if (!ValidationUtils.isLastNameNotEmptyOrBlank(lastname)){
             isValid = false
-            Toast.makeText(activity, "Nom non valide", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Le champ Nom ne doit pas être vide", Toast.LENGTH_SHORT).show()
         }
 
         return isValid
-    }
-
-    private fun setData(firstname: String, lastname: String) {
-        val spe: SharedPreferences? = activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
-        spe?.edit()?.putString("USER_FIRSTNAME", firstname)?.apply()
-        spe?.edit()?.putString("USER_LASTNAME", lastname)?.apply()
     }
 }

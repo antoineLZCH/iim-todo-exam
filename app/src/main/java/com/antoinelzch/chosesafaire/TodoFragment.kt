@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antoinelzch.chosesafaire.data.models.Todo
+import com.antoinelzch.chosesafaire.data.utils.SPUtils
 import com.antoinelzch.chosesafaire.presentation.adapters.TodoAdapter
 import kotlinx.android.synthetic.main.fragment_tasks.*
 import com.antoinelzch.chosesafaire.presentation.viewmodel.TodoViewModel as TodoViewModel
@@ -26,6 +28,9 @@ class TodoFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        todoTitle.text = getString(R.string.hello, SPUtils.getFirstName(), SPUtils.getLastName())
+        Toast.makeText(this.activity, getString(R.string.connected_as, SPUtils.getFirstName(), SPUtils.getLastName()), Toast.LENGTH_SHORT).show()
 
         context?.let {
             viewModel = TodoViewModel(it)
