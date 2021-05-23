@@ -36,12 +36,12 @@ class LoginFragment : Fragment() {
             Log.d("tag", "Navigation")
         }
 
-        val email: String = main_username.text.toString()
-        val password: String = main_password.text.toString()
-
-        Log.d("tag", "${main_password.text}, ${main_username.text}")
 
         main_button_sign_in.setOnClickListener {
+            val email: String = main_username.text.toString()
+            val password: String = main_password.text.toString()
+
+            Log.d("tag", "${main_password.text}, ${main_username.text}")
             if (isValidate(email, password)){
                 callApi(email, password)
             }
@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
             Toast.makeText(activity, "Email non valide", Toast.LENGTH_SHORT).show()
         }
 
-        if (password.isEmpty() || password.length > 4){
+        if (password.isEmpty() || password.length < 4){
             isValid = false
             Toast.makeText(activity, "Mot de passe non valide, minimum 4 charactères", Toast.LENGTH_SHORT).show()
 
