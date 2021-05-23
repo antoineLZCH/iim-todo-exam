@@ -9,33 +9,42 @@ import kotlinx.coroutines.*
 
 class TodoViewModel(context: Context): ViewModel() {
 
-    val database = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java, "ChosesAFaire"
-    ).build()
+    private val database = AppDatabase.get(context)
 
-    fun test(): List<Todo> {
-        val todoDao = database.todoDao()
-        return todoDao.getTodos()
-    }
-
-    fun insertTodos(list: List<Todo>) {
+    fun insertTodos(todoList: List<Todo>) {
       GlobalScope.launch {
-          val todoDao = database.todoDao()
-          todoDao.addAllTodos(list)
+          val todoDao = database?.todoDao()
+          todoDao?.addAllTodos(todoList)
       }
     }
 
-    fun insertTodo(todo: Todo) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val todoDao = database.todoDao()
-            todoDao.addTodo(todo)
+    fun insertTodo(todo: Todo, listener: (Todo) -> Unit) {
+        GlobalScope.launch {
+            val todoDao = database?.todoDao()
+            todoDao?.let {
+                todoDao.addTodo(todo)?.let {
+                    todo.id = it.toInt()
+                    withContext(Dispatchers.Main) { listener(todo)}
+                }
+            }
         }
     }
 
-    fun getTodos(): List<Todo> {
-        val todoDao = database.todoDao()
-        return todoDao.getTodos()
+    fun deleteTodo(todo: Todo) {
+        GlobalScope.launch {
+            val todoDao = database?.todoDao()
+            todoDao?.deleteTodo(todo)
+        }
+    }
+
+    fun getTodos(listener: (List<Todo>?) -> Unit) {
+        GlobalScope.launch {
+            val todoDao = database?.todoDao()
+            val todoList = todoDao?.getTodos()
+            withContext(Dispatchers.Main) {
+                listener(todoList)
+            }
+        }
     }
 
 }

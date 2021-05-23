@@ -12,7 +12,7 @@ interface TodoDao {
     fun addAllTodos(todos: List<Todo>)
 
     @Insert
-    fun addTodo(todo: Todo)
+    fun addTodo(todo: Todo): Long?
 
     @Update
     fun updateTodo(todo: Todo)

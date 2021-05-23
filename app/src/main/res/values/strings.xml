@@ -14,4 +14,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="no_todo">Vous n\'avez aucune todo</string>
+    <string name="new_todo">Nouvelle tâche</string>
 </resources>
