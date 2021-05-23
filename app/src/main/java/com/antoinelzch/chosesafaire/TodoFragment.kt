@@ -55,12 +55,13 @@ class TodoFragment: Fragment() {
     }
 
     private fun addNewTask(todo: Todo) {
-        todoList.add(todo)
-        viewModel.insertTodo(todo) {newTodo ->
-            todos_rv.adapter?.notifyDataSetChanged()
-        }
+        viewModel.insertTodo(todo) {newTodo -> addTodoToList(newTodo)}
     }
 
+    private fun addTodoToList(todo: Todo) {
+        todoList.add(todo)
+        todos_rv.adapter?.notifyDataSetChanged()
+    }
 
     private fun refreshData(todoList: List<Todo>?) {
         todoList?.let {
